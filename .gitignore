@@ -32,3 +32,9 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# data
+data/
+
+# jupyter
+.ipynb_checkpoints/

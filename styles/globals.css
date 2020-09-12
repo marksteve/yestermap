@@ -14,3 +14,5 @@ a {
 * {
   box-sizing: border-box;
 }
+
+@import url('https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css');
