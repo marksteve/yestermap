@@ -38,3 +38,6 @@ data/
 
 # jupyter
 .ipynb_checkpoints/
+
+# leveldown
+db/
