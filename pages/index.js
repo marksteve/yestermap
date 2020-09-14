@@ -1,23 +1,16 @@
 import mapboxgl from 'mapbox-gl'
 import { useEffect, useRef, useState } from 'react'
 import { ControlContainer, HistoryControl } from '../components/HistoryControl'
-import styles from '../styles/Home.module.css'
 import { useHistory } from '../stores/history'
+import styles from '../styles/Home.module.css'
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
 
 export default function Home() {
   const container = useRef()
   const map = useRef()
-  const interval = useRef()
-
-  const [history, setHistory] = useState({
-    type: 'FeatureCollection',
-    features: [],
-  })
   const [controlContainer, setControlContainer] = useState(null)
-
-  const yearsAgo = useHistory((state) => state.yearsAgo)
+  const data = useHistory((state) => state.data)
 
   useEffect(() => {
     map.current = new mapboxgl.Map({
@@ -31,7 +24,7 @@ export default function Home() {
     map.current.on('load', () => {
       map.current.addSource('history', {
         type: 'geojson',
-        data: history,
+        data: data,
       })
 
       map.current.addLayer({
@@ -64,8 +57,6 @@ export default function Home() {
       map.current.loadImage('/marker.png', (err, image) => {
         if (err) throw err
         map.current.addImage('marker', image)
-        fetchHistory()
-        interval.current = setInterval(fetchHistory, 60 * 1000)
       })
 
       const controlContainer = new ControlContainer()
@@ -79,28 +70,10 @@ export default function Home() {
     if (!source) {
       return
     }
-    source.setData(history)
-    const [lng, lat] = history.features[0].geometry.coordinates
+    source.setData(data)
+    const [lng, lat] = data.features[0].geometry.coordinates
     map.current.fitBounds(new mapboxgl.LngLat(lng, lat).toBounds(5000))
-  }, [history])
-
-  async function fetchHistory() {
-    const params = new URLSearchParams()
-    params.set('yearsAgo', yearsAgo)
-    const res = await fetch(`/api/history?${params.toString()}`)
-    const { history } = await res.json()
-    setHistory({
-      type: 'FeatureCollection',
-      features: history.map((location, i) => ({
-        type: 'Feature',
-        properties: { ...location, index: i },
-        geometry: {
-          type: 'Point',
-          coordinates: [location.longitude, location.latitude],
-        },
-      })),
-    })
-  }
+  }, [data])
 
   let control = null
   if (controlContainer) {

@@ -1,6 +1,7 @@
+import { useEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
-import styles from '../styles/HistoryControl.module.css'
 import { useHistory } from '../stores/history'
+import styles from '../styles/HistoryControl.module.css'
 
 export class ControlContainer {
   onAdd(map) {
@@ -17,8 +18,35 @@ export class ControlContainer {
 }
 
 export function HistoryControl(props) {
+  const interval = useRef()
+
   const yearsAgo = useHistory((state) => state.yearsAgo)
   const setYearsAgo = useHistory((state) => state.setYearsAgo)
+  const setData = useHistory((state) => state.setData)
+
+  useEffect(() => {
+    fetchHistory()
+    interval.current = setInterval(fetchHistory, 60 * 1000)
+  }, [])
+
+  async function fetchHistory() {
+    console.log('Fetching history...')
+    const params = new URLSearchParams()
+    params.set('yearsAgo', yearsAgo)
+    const res = await fetch(`/api/history?${params.toString()}`)
+    const { history } = await res.json()
+    setData({
+      type: 'FeatureCollection',
+      features: history.map((location, i) => ({
+        type: 'Feature',
+        properties: { ...location, index: i },
+        geometry: {
+          type: 'Point',
+          coordinates: [location.longitude, location.latitude],
+        },
+      })),
+    })
+  }
 
   return ReactDOM.createPortal(
     <div className={styles.container}>
