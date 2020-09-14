@@ -38,17 +38,7 @@ export function HistoryControl(props) {
     params.set('yearsAgo', yearsAgo)
     const res = await fetch(`/api/history?${params.toString()}`)
     const { history } = await res.json()
-    setData({
-      type: 'FeatureCollection',
-      features: history.map((location, i) => ({
-        type: 'Feature',
-        properties: { ...location, index: i },
-        geometry: {
-          type: 'Point',
-          coordinates: [location.longitude, location.latitude],
-        },
-      })),
-    })
+    setData(history);
   }
 
   return ReactDOM.createPortal(

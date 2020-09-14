@@ -1,5 +1,6 @@
 import mapboxgl from 'mapbox-gl'
 import { useEffect, useRef, useState } from 'react'
+import { bezier } from 'turf'
 import { ControlContainer, HistoryControl } from '../components/HistoryControl'
 import { useHistory } from '../stores/history'
 import styles from '../styles/Home.module.css'
@@ -22,25 +23,42 @@ export default function Home() {
     })
 
     map.current.on('load', () => {
-      map.current.addSource('history', {
+      map.current.addSource('lines', {
         type: 'geojson',
-        data: data,
+        data: {
+          type: 'FeatureCollection',
+          features: [],
+        },
+      })
+
+      map.current.addSource('points', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: [],
+        },
       })
 
       map.current.addLayer({
-        id: 'history',
-        type: 'symbol',
-        source: 'history',
+        id: 'lines',
+        type: 'line',
+        source: 'lines',
         paint: {
-          'icon-opacity': [
-            'interpolate',
-            ['linear'],
-            ['get', 'index'],
-            0,
-            1,
-            99,
-            0.2,
-          ],
+          'line-color': '#4a3f22',
+          'line-width': 2,
+          'line-dasharray': [2, 4],
+        },
+        layout: {
+          'line-cap': 'round',
+          'line-join': 'round',
+        },
+      })
+
+      map.current.addLayer({
+        id: 'points',
+        type: 'symbol',
+        source: 'points',
+        paint: {
           'text-color': '#4a3f22',
           'text-halo-color': '#d4c6a0',
           'text-halo-width': 2,
@@ -53,7 +71,7 @@ export default function Home() {
             ['get', 'index'],
             0,
             1,
-            99,
+            9,
             0.2,
           ],
           'text-font': ['Playfair Display Bold'],
@@ -75,13 +93,50 @@ export default function Home() {
   }, [container])
 
   useEffect(() => {
-    const source = map.current.getSource('history')
-    if (!source) {
+    const lines = map.current.getSource('lines')
+    const points = map.current.getSource('points')
+
+    if (!lines || !points || !data.length) {
       return
     }
-    source.setData(data)
-    const [lng, lat] = data.features[0].geometry.coordinates
-    map.current.fitBounds(new mapboxgl.LngLat(lng, lat).toBounds(5000))
+
+    if (data.length > 1) {
+      lines.setData(
+        bezier({
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'LineString',
+            coordinates: data.map((location, i) => [
+              location.longitude,
+              location.latitude,
+            ]),
+          },
+        })
+      )
+    } else {
+      lines.setData({
+        type: 'FeatureCollection',
+        features: [],
+      })
+    }
+
+    points.setData({
+      type: 'FeatureCollection',
+      features: data.map((location, i) => ({
+        type: 'Feature',
+        properties: { ...location, index: i },
+        geometry: {
+          type: 'Point',
+          coordinates: [location.longitude, location.latitude],
+        },
+      })),
+    })
+
+    const { longitude, latitude } = data[0]
+    map.current.fitBounds(
+      new mapboxgl.LngLat(longitude, latitude).toBounds(5000)
+    )
   }, [data])
 
   let control = null
