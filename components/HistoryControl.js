@@ -25,9 +25,12 @@ export function HistoryControl(props) {
   const setData = useHistory((state) => state.setData)
 
   useEffect(() => {
+    if (interval.current) {
+      clearInterval(interval.current)
+    }
     fetchHistory()
     interval.current = setInterval(fetchHistory, 60 * 1000)
-  }, [])
+  }, [yearsAgo])
 
   async function fetchHistory() {
     console.log('Fetching history...')
@@ -51,7 +54,20 @@ export function HistoryControl(props) {
   return ReactDOM.createPortal(
     <div className={styles.container}>
       <h1>Yestermap</h1>
-      <p>This map shows where I was {yearsAgo} years ago.</p>
+      <p>
+        A map that shows where I was{' '}
+        <select value={yearsAgo} onChange={(e) => setYearsAgo(e.target.value)}>
+          <option value="1">1 year</option>
+          <option value="2">2 years</option>
+          <option value="3">3 years</option>
+          <option value="4">4 years</option>
+          <option value="5">5 years</option>
+          <option value="6">6 years</option>
+          <option value="7">7 years</option>
+          <option value="8">8 years</option>
+        </select>{' '}
+        ago.
+      </p>
     </div>,
     props.container
   )

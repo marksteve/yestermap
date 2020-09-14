@@ -33,7 +33,7 @@ function getHistory(date, yearsAgo) {
     db.createValueStream({
       lte: subYears(date, yearsAgo).getTime(),
       reverse: true,
-      limit: 10,
+      limit: 1,
     })
       .on('data', (data) => {
         history.push({

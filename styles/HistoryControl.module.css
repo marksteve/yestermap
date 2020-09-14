@@ -1,15 +1,23 @@
 .container {
   font: 20px/1 Playfair Display, serif;
-  padding: 1em;
-  text-shadow: 1px 1px 0 var(--water-color);
+  background: var(--light-land-color);
+  padding: 1rem;
+  border: 2px solid;
 }
 
 .container h1 {
   font-size: 2em;
-  margin: 0 0 0.33em;
+  margin: 0 0 0.33rem;
 }
 
 .container p {
   line-height: 1.5;
   margin: 0;
+}
+
+.container select {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  background: var(--light-land-color);
 }
