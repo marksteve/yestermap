@@ -17,7 +17,12 @@
 
 .container select {
   font: inherit;
+  font-weight: bold;
   color: inherit;
   border: 0;
   background: var(--light-land-color);
+}
+
+.container select:focus {
+  outline: none;
 }

@@ -36,10 +36,24 @@ export function HistoryControl(props) {
     console.log('Fetching history...')
     const params = new URLSearchParams()
     params.set('yearsAgo', yearsAgo)
-    const res = await fetch(`/api/history?${params.toString()}`)
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/history?${params.toString()}`
+    )
     const { history } = await res.json()
-    setData(history);
+    setData(history)
   }
+
+  const notice =
+    parseInt(yearsAgo, 10) === 1 ? (
+      <p>
+        <small>
+          <em>
+            Note: I accidentally disabled location history from June to early November
+            2019.
+          </em>
+        </small>
+      </p>
+    ) : null
 
   return ReactDOM.createPortal(
     <div className={styles.container}>
@@ -58,6 +72,7 @@ export function HistoryControl(props) {
         </select>{' '}
         ago.
       </p>
+      {notice}
     </div>,
     props.container
   )

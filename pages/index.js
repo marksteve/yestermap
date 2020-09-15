@@ -1,6 +1,6 @@
+import bezier from '@turf/bezier-spline'
 import mapboxgl from 'mapbox-gl'
 import { useEffect, useRef, useState } from 'react'
-import { bezier } from 'turf'
 import { ControlContainer, HistoryControl } from '../components/HistoryControl'
 import { useHistory } from '../stores/history'
 import styles from '../styles/Home.module.css'
