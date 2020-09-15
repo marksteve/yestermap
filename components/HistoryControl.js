@@ -45,11 +45,11 @@ export function HistoryControl(props) {
 
   const notice =
     parseInt(yearsAgo, 10) === 1 ? (
-      <p>
+      <p className={styles.notice}>
         <small>
           <em>
             Note: I accidentally disabled location history from June to early November
-            2019.
+            2019. I didn't get stuck in one place for more than 5 months. Until this pandemic...
           </em>
         </small>
       </p>
