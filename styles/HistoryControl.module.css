@@ -1,5 +1,6 @@
 .container {
   font: 20px/1 Playfair Display, serif;
+  font-weight: 400;
   background: var(--light-land-color);
   padding: 1rem;
   border: 2px solid;
@@ -7,6 +8,7 @@
 
 .container h1 {
   font-size: 2em;
+  font-weight: 900;
   margin: 0 0 0.33rem;
 }
 
