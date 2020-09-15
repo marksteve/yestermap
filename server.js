@@ -6,6 +6,7 @@ const history = require('./api/history')
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
+const port = process.env.PORT || 3000
 
 app.prepare().then(() => {
   createServer((req, res) => {
@@ -16,8 +17,8 @@ app.prepare().then(() => {
     } else {
       handle(req, res, parsedUrl)
     }
-  }).listen(process.env.PORT, (err) => {
+  }).listen(port, (err) => {
     if (err) throw err
-    console.log(`> Ready on ${process.env.PORT}`)
+    console.log(`> Ready on :${port}`)
   })
 })
