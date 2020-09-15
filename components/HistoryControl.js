@@ -49,7 +49,7 @@ export function HistoryControl(props) {
         <small>
           <em>
             Note: I accidentally disabled location history from June to early November
-            2019. I didn't get stuck in one place for more than 5 months. Until this pandemic...
+            2019. I didn't get stuck in one place for more than 5 months. Not until this pandemic...
           </em>
         </small>
       </p>
@@ -59,7 +59,7 @@ export function HistoryControl(props) {
     <div className={styles.container}>
       <h1>Yestermap</h1>
       <p>
-        A live map that shows where I was{' '}
+        A live map that shows where I was at this moment{' '}
         <select value={yearsAgo} onChange={(e) => setYearsAgo(e.target.value)}>
           <option value="1">1 year</option>
           <option value="2">2 years</option>
