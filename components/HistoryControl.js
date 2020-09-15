@@ -59,7 +59,7 @@ export function HistoryControl(props) {
     <div className={styles.container}>
       <h1>Yestermap</h1>
       <p>
-        A map that shows where I was{' '}
+        A live map that shows where I was{' '}
         <select value={yearsAgo} onChange={(e) => setYearsAgo(e.target.value)}>
           <option value="1">1 year</option>
           <option value="2">2 years</option>
